@@ -7,7 +7,7 @@ import { TypedStatus } from './enums/TypedStatus';
 function App() {
 
   // game constants
-  const PARAGRAPH_LENGTH = 10;
+  const PARAGRAPH_LENGTH = 2;
   const MOST_COMMON_WORDS_RANGE = 1000;
 
   // The user's current text input
@@ -91,14 +91,16 @@ function App() {
 
     // change status list
     const newTypedStatusList = typedStatusList;
+
+    const wordInputTrimmed = wordInput.trim();
     
-    if (wordInput.trim() !== currentWord) {
+    if (wordInputTrimmed !== currentWord) {
       newTypedStatusList[currentWordIndex] = TypedStatus.INCORRECT;
     }
     else if (hadTypo) {
       newTypedStatusList[currentWordIndex] = TypedStatus.TYPO;
     } 
-    else if (wordInput.trim() === currentWord) {
+    else if (wordInputTrimmed === currentWord) {
       newTypedStatusList[currentWordIndex] = TypedStatus.CORRECT;
     }
 
@@ -108,8 +110,9 @@ function App() {
     // new word, set had typo to false
     setHadTypo(false);
 
-    setTypedWords([...typedWords, textInput]);
+    setTypedWords([...typedWords, wordInput]);
     setTimestamps([...timestamps, new Date()]);
+    console.log(timestamps)
     // set text input back to blank
     setTextInput('');
 
@@ -121,12 +124,18 @@ function App() {
     const startTime = timestamps[0];
     const finishTime = timestamps[PARAGRAPH_LENGTH - 1];
     const durationSeconds = Math.abs(finishTime.getTime() - startTime.getTime()) / 1000;
+    console.log(finishTime)
+    console.log(startTime)
     
     // standardised word is 5 letters long
     const wpm = paragraph.length / (durationSeconds/60) / 5
+    const length = paragraph.length;
 
-    // setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm`);
-    setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm`);
+    // calculate accuracy
+    const accuracy = typedStatusList.filter(status => status === TypedStatus.CORRECT || status === TypedStatus.TYPO).length / PARAGRAPH_LENGTH;
+
+    // setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm ${length} characters ${accuracy} accuracy ${wpm * accuracy} calculated`);
+    setParagraph(typedWords.toString())
   }
 
   function onKeyPress(e: React.KeyboardEvent) {
@@ -179,16 +188,19 @@ function App() {
 
   return (
     <>
-      <div>
-        <div className='untyped-word'>
-          current input: {textInput}
+      <div className='flex flex-col items-center'>
+        <div className='untyped-word min-h-10'>
+          {textInput}
         </div>
         <ParagraphDisplay paragraph={paragraph} typedStatuses={typedStatusList} currentIndex={currentWordIndex} currentInput={textInput} />
         <input onBlur={({target}) => target.focus()} autoFocus className='text-input' onKeyDown={(e: React.KeyboardEvent) => {
           onKeyPress(e);
         }} />
-        <button onClick={() => onReset()}>
-          Reset <sub>(CTRL + Enter)</sub>
+        <button onClick={() => onReset()} className='flex'>
+          <p>
+          Reset
+          </p>
+          <p className=''>(CTRL+Enter)</p>
         </button>
       </div>
     </>
