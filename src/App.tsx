@@ -4,12 +4,13 @@ import ParagraphDisplay from './components/ParagraphDisplay';
 import { Keys } from './enums/Keys';
 import { TypedStatus } from './enums/TypedStatus';
 import { useNavigate } from 'react-router';
+import Tooltip from './components/Tooltip';
 
 function App() {
   let navigate = useNavigate();
 
   // game constants
-  const PARAGRAPH_LENGTH = 10;
+  const PARAGRAPH_LENGTH = 16;
   const MOST_COMMON_WORDS_RANGE = 1000;
 
   // The user's current text input
@@ -128,23 +129,24 @@ function App() {
     const startTime = timestamps[0];
     const finishTime = timestamps[PARAGRAPH_LENGTH];
     const durationSeconds = Math.abs(finishTime.getTime() - startTime.getTime()) / 1000;
-    
+    const characters = paragraph.length;
+
     // standardised word is 5 letters long
-    const wpm = paragraph.length / (durationSeconds/60) / 5
-    const length = paragraph.length;
+    const wpm = Math.round((characters / (durationSeconds/60) / 5 * 100)) / 100
 
     const paragraphWords = paragraph.split(' ');
+
     // calculate accuracy
     const incorrectWords: string[] = [];
     typedStatusList.forEach((typedStatus, index) => {
       if (typedStatus === TypedStatus.INCORRECT) incorrectWords.push(paragraphWords[index]);
     } );
 
-    const accuracy = (paragraph.length - incorrectWords.join('').length) / paragraph.length;
+    const accuracy = Math.round(((characters - incorrectWords.join('').length) / characters) * 10000) / 100;
     
-    setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm ${length} characters ${accuracy} accuracy ${wpm * accuracy} calculated`);
+    setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm ${characters} characters ${accuracy} accuracy ${wpm * accuracy} calculated`);
   
-    navigate('/finish', {state: {wpm: wpm, accuracy: accuracy}});
+    navigate('/finish', {state: {wpm: wpm, accuracy: accuracy, characters: characters, duration: durationSeconds.toString(), typedWords: typedWords, typedStatuses: typedStatusList, paragraph: paragraph}});
   }
 
   function onKeyPress(e: React.KeyboardEvent) {
@@ -198,18 +200,19 @@ function App() {
   return (
     <>
       <div className='flex flex-col items-center'>
-        <div className='untyped-word min-h-10'>
+        <div className={`${textInput === currentWord.substring(0,textInput.length) ? 'text-[rgb(230,230,230)]' : 'text-[rgb(207,0,0)]'} word-input min-h-10`}>
           {textInput}
         </div>
         <ParagraphDisplay paragraph={paragraph} typedStatuses={typedStatusList} currentIndex={currentWordIndex} currentInput={textInput} />
         <input onBlur={({target}) => target.focus()} autoFocus className='text-input' onKeyDown={(e: React.KeyboardEvent) => {
           onKeyPress(e);
         }} />
-        <button onClick={() => onReset()} className='flex'>
+        <button onClick={() => onReset()} className='relative button flex flex-row space-x-3 group'>
+          <img src='/icons/refresh.svg' />
           <p>
-          Reset
+            Reset
           </p>
-          <p className=''>(CTRL+Enter)</p>
+          <Tooltip title='CTRL + Enter' className='group-hover:opacity-100' />
         </button>
       </div>
     </>
