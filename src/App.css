@@ -1,4 +1,4 @@
-
+@import 'tailwindcss';
 
 #root {
   max-width: 1280px;
@@ -7,35 +7,82 @@
 
 @font-face {
   font-family: 'SourceCodePro';
-  src: local('SourceCodePro');
+  src: url('/fonts/Source_Code_Pro/SourceCodePro.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SpecialGothic';
+  src: url('/fonts/Special_Gothic_Expanded_One/SpecialGothicExpandedOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Karla';
+  src: url('/fonts/Karla/Karla-VariableFont_wght.ttf') format('truetype');
 }
 
 .correct-word {
-  color: green;
+  color: rgb(230, 230, 230);
 }
 
 .untyped-word {
-  color: gray;
+  color: #9c7445;
 }
 
 .incorrect-word {
-  color: red;
+  color: rgb(207, 0, 0);
+  font-weight: bold;
 }
 
 .typoed-word {
-  color: yellow;
+  color: rgb(207, 207, 0);
+  font-weight: bold;
+}
+
+.title {
+  color: rgb(230, 230, 230);
+  font-family: 'SpecialGothic';
 }
 
 .word {
   font-size: 2rem;
-  font-family: 'SourceCodePro', monospace;
+  font-family: 'SourceCodePro';
 }
 
 .text-input {
   opacity: 0%;
 }
 
-.current-letter {
-  @apply underline;
-  text-underline-position: under;
+
+.statistic {
+  color: #F79F79;
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: 'SpecialGothic';
+  line-height: 1.5rem;
+}
+
+.statistic-category {
+  color: #9c7445;
+  font-family: 'Karla';
+}
+
+.word-input {
+  font-family: 'SourceCodePro';
+  font-size: larger;
+}
+
+.button {
+  @apply text-lg rounded-md px-4 py-2;
+  background-color: #9c7445;
+  color: #000000;
+  font-family: 'Karla';
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #6d5131;
+}
+
+.button:active {
+  background-color: #523d25;
 }
