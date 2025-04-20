@@ -1,7 +1,6 @@
 import { TypedStatus } from "../enums/TypedStatus";
 import '../App.css';
 import clsx from 'clsx';
-import UnderscoreCaret from "./UnderscoreCaret";
 
 
 type ParagraphDisplayProps = {
@@ -34,16 +33,13 @@ const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput}:
                 )}
                 >
                     {word.split('').map((letter, letterIndex) => (
-                        <span key={letterIndex} className={'relative'}>
+                        <span key={letterIndex} className={clsx(
+                            '',
+                            currentIndex === wordIndex && currentInput.length === letterIndex
+                            ? 'underline underline-offset-8'
+                            : ''
+                        )}>
                             {letter}
-                            <UnderscoreCaret
-                                className={clsx(
-                                '',
-                                currentIndex === wordIndex && letterIndex === currentInput.length
-                                    ? 'absolute transition left-0 -bottom-[2px]'
-                                    : 'hidden'
-                                )}
-                            />
                         </span>
                     ))}{' '}
                 </span>
