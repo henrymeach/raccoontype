@@ -12,7 +12,7 @@ export default function Finish() {
         <>
             <div className="flex flex-col space-y-20 items-center">
                 <section className="flex flex-wrap space-x-5">
-                    {paragraph.split(' ').map((word, index) => (
+                    {paragraph.split(' ').map((word: string, index: number) => (
                         <span className={clsx(
                             'relative word !text-3xl/16',
                             typedStatuses[index] === TypedStatus.INCORRECT ? 'incorrect-word' :
