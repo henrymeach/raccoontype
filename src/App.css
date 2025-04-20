@@ -10,10 +10,6 @@
   src: local('SourceCodePro');
 }
 
-.read-the-docs {
-  color: #888;
-}
-
 .correct-word {
   color: green;
 }
@@ -40,5 +36,6 @@
 }
 
 .current-letter {
-  text-decoration: underline;
+  @apply underline;
+  text-underline-position: under;
 }

@@ -3,11 +3,13 @@ import './App.css'
 import ParagraphDisplay from './components/ParagraphDisplay';
 import { Keys } from './enums/Keys';
 import { TypedStatus } from './enums/TypedStatus';
+import { useNavigate } from 'react-router';
 
 function App() {
+  let navigate = useNavigate();
 
   // game constants
-  const PARAGRAPH_LENGTH = 2;
+  const PARAGRAPH_LENGTH = 10;
   const MOST_COMMON_WORDS_RANGE = 1000;
 
   // The user's current text input
@@ -49,7 +51,6 @@ function App() {
 
   // Set the current letter index (weird function)
   useEffect(() => {
-    // console.log(textInput.length)
     setCurrentLetterIndex(textInput.length);
   }, [textInput]);
 
@@ -59,6 +60,7 @@ function App() {
       onParagraphFinish();
     }
   }, [typedWords]);
+
 
   // Reset paragraph to new paragraph
   const onReset = () => {
@@ -79,18 +81,18 @@ function App() {
     // currentWord = paragraph.split(' ')[currentWordIndex];
     setCurrentLetterIndex(0);
     setHadTypo(false);
-    setTypedStatusList([]);
+    setTypedStatusList(new Array(PARAGRAPH_LENGTH).fill(TypedStatus.UNTYPED));
     setTypedWords([]);
     setTimestamps([]);
 
     setParagraph(newParagraph);
-    setTypedStatusList(new Array(PARAGRAPH_LENGTH).fill(TypedStatus.UNTYPED));
+    
   }
 
   function onWordFinish(wordInput: string) {
 
     // change status list
-    const newTypedStatusList = typedStatusList;
+    const newTypedStatusList = [...typedStatusList];
 
     const wordInputTrimmed = wordInput.trim();
     
@@ -110,9 +112,10 @@ function App() {
     // new word, set had typo to false
     setHadTypo(false);
 
-    setTypedWords([...typedWords, wordInput]);
-    setTimestamps([...timestamps, new Date()]);
-    console.log(timestamps)
+    setTimestamps(prev => [...prev, new Date()]);
+
+    setTypedWords(prev => [...prev, wordInput]);
+
     // set text input back to blank
     setTextInput('');
 
@@ -121,21 +124,27 @@ function App() {
   }
 
   function onParagraphFinish() {
+
     const startTime = timestamps[0];
-    const finishTime = timestamps[PARAGRAPH_LENGTH - 1];
+    const finishTime = timestamps[PARAGRAPH_LENGTH];
     const durationSeconds = Math.abs(finishTime.getTime() - startTime.getTime()) / 1000;
-    console.log(finishTime)
-    console.log(startTime)
     
     // standardised word is 5 letters long
     const wpm = paragraph.length / (durationSeconds/60) / 5
     const length = paragraph.length;
 
+    const paragraphWords = paragraph.split(' ');
     // calculate accuracy
-    const accuracy = typedStatusList.filter(status => status === TypedStatus.CORRECT || status === TypedStatus.TYPO).length / PARAGRAPH_LENGTH;
+    const incorrectWords: string[] = [];
+    typedStatusList.forEach((typedStatus, index) => {
+      if (typedStatus === TypedStatus.INCORRECT) incorrectWords.push(paragraphWords[index]);
+    } );
 
-    // setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm ${length} characters ${accuracy} accuracy ${wpm * accuracy} calculated`);
-    setParagraph(typedWords.toString())
+    const accuracy = (paragraph.length - incorrectWords.join('').length) / paragraph.length;
+    
+    setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm ${length} characters ${accuracy} accuracy ${wpm * accuracy} calculated`);
+  
+    navigate('/finish', {state: {wpm: wpm, accuracy: accuracy}});
   }
 
   function onKeyPress(e: React.KeyboardEvent) {
