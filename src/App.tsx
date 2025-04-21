@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import ParagraphDisplay from './components/ParagraphDisplay';
 import { Keys } from './enums/Keys';
@@ -14,6 +14,9 @@ function App() {
   const wordsRanges = [1000, 2000, 5000, 10000];
   const [paragraphLengthIndex, setParagraphLengthIndex] = useState<number>(1);
   const [wordsRangeIndex, setWordsRangeIndex] = useState<number>(0);
+
+  // ref
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // The user's current text input
   const [textInput, setTextInput] = useState<string>('');
@@ -34,6 +37,8 @@ function App() {
   const [typedWords, setTypedWords] = useState<string[]>([]);
   // timestamps for each word
   const [timestamps, setTimestamps] = useState<Date[]>([]);
+  // user focused on paragraph display?
+  const [focused, setFocused] = useState<boolean>(true);
 
 
   // Fetch the available words
@@ -199,31 +204,46 @@ function App() {
     
   }
 
+  function handleFocus() {
+    if (focused === false) {
+      inputRef.current?.focus();
+      setFocused(true);
+    }
+  }
+
+  function handleBlur() {
+    if (focused === true) {
+      setFocused(false);
+    }
+  }
+
   return (
     <>
-      <div className='flex flex-col relative'>
+      <div className='flex flex-col relative' >
         <div className='flex flex-col items-center mb-30'>
           <div className={`${textInput === currentWord.substring(0,textInput.length) ? 'text-[rgb(230,230,230)]' : 'text-[rgb(207,0,0)]'} word-input min-h-10`}>
             {textInput}
           </div>
-          <ParagraphDisplay paragraph={paragraph} typedStatuses={typedStatusList} currentIndex={currentWordIndex} currentInput={textInput}  />
-          <input onBlur={({target}) =>  target.focus()} autoFocus className='text-input h-0' onKeyDown={(e: React.KeyboardEvent) => {
-            onKeyPress(e);
+          <ParagraphDisplay paragraph={paragraph} typedStatuses={typedStatusList} currentIndex={currentWordIndex} currentInput={textInput} focused={focused} onClick={() => handleFocus()} />
+          <input ref={inputRef} onBlur={() => handleBlur()} autoFocus className='text-input h-0' onKeyDown={(e: React.KeyboardEvent) => {
+          onKeyPress(e);
           }} />
         </div>
+
+        {/* buttons */}
         <div className='fixed bottom-[20%] right-1/2 translate-x-1/2 grid grid-cols-[1fr_3fr_1fr] max-w-[30%] w-full space-x-4'>
-          <button className='relative button group' onClick={() => setParagraphLengthIndex(prev => (prev + 1) % paragraphLengths.length)}>
+          <button className='relative button group' onClick={() => {setParagraphLengthIndex(prev => (prev + 1) % paragraphLengths.length); handleFocus()}}>
             {paragraphLengths[paragraphLengthIndex]}
             <Tooltip title='Words' />
           </button>
-          <button onClick={() => onReset()} className='relative button flex flex-row justify-center space-x-3 group'>
+          <button onClick={() => {onReset(); handleFocus()}} className='relative button flex flex-row justify-center space-x-3 group'>
             <img src='/icons/refresh.svg' />
             <p>
               Reset
             </p>
             <Tooltip title='Shift + Enter' />
           </button>
-          <button className='relative button group' onClick={() => setWordsRangeIndex(prev => (prev + 1) % wordsRanges.length)}>
+          <button className='relative button group' onClick={() => {setWordsRangeIndex(prev => (prev + 1) % wordsRanges.length); handleFocus()}}>
             {wordsRanges[wordsRangeIndex]}
             <Tooltip title='Most Common Words' />
           </button>

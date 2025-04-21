@@ -65,6 +65,12 @@
   font-size: larger;
 }
 
+.click-to-focus {
+  font-family: 'SpecialGothic';
+  font-size: 1.5rem;
+  color: #e6e6e6;
+}
+
 .button {
   @apply text-lg rounded-full px-4 py-2;
   background-color: #9c7445;

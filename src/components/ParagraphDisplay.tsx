@@ -9,9 +9,11 @@ type ParagraphDisplayProps = {
     typedStatuses: string[];
     currentIndex: number;
     currentInput: string;
+    focused: boolean;
+    onClick?: () => void;
 }
 
-const ParagraphDisplay = ({ paragraph, typedStatuses, currentIndex, currentInput }: ParagraphDisplayProps) => {
+const ParagraphDisplay = ({ paragraph, typedStatuses, currentIndex, currentInput, focused, onClick }: ParagraphDisplayProps) => {
     const [visible, setVisible] = useState<boolean>(true);
     const [displayedParagraph, setDisplayedParagraph] = useState<string>(paragraph);
 
@@ -29,20 +31,20 @@ const ParagraphDisplay = ({ paragraph, typedStatuses, currentIndex, currentInput
     }, [paragraph]);
 
     return (
-        <div className={`${visible ? 'opacity-100' : 'opacity-0'} duration-100 min-w-full`}>
+        <div className={`${visible ? 'opacity-100' : 'opacity-0'} duration-100 min-w-full`} onClick={onClick}>
             <p>
-                {renderParagraph({paragraph: displayedParagraph, typedStatuses, currentIndex, currentInput})}
+                {renderParagraph({paragraph: displayedParagraph, typedStatuses, currentIndex, currentInput, focused})}
             </p>
         </div>
     )
 }
 
-const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput}: ParagraphDisplayProps) => {
+const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput, focused}: ParagraphDisplayProps) => {
     return (
-        <div>
+        <div className="relative">
         {
             paragraph.split(' ').map((word, wordIndex) => (
-                <span key={wordIndex} className={clsx('word',
+                <span key={wordIndex} className={clsx(`word transition duration-500 ${focused ? '' : 'blur-xs'}`,
                     typedStatuses[wordIndex] === TypedStatus.CORRECT ? 'correct-word' :
                     typedStatuses[wordIndex] === TypedStatus.INCORRECT ? 'incorrect-word' :
                     typedStatuses[wordIndex] === TypedStatus.TYPO ? 'typoed-word' :
@@ -52,9 +54,10 @@ const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput}:
                     {word.split('').map((letter, letterIndex) => (
                         <span key={letterIndex} className={clsx(
                             '',
-                            currentIndex === wordIndex && currentInput.length === letterIndex
-                            ? 'underline underline-offset-8'
-                            : ''
+                            currentIndex === wordIndex && currentInput.length === letterIndex ?
+                            'underline underline-offset-8' :
+                            ''
+                            
                         )}>
                             {letter}
                         </span>
@@ -62,6 +65,7 @@ const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput}:
                 </span>
             ))
         }
+        <p className={`${focused ? 'opacity-0' : 'opacity-100'} transition duration-700 absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 click-to-focus`}>Click here to focus</p>
         </div>
     )
 }
