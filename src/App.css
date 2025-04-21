@@ -1,10 +1,5 @@
 @import 'tailwindcss';
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
 @font-face {
   font-family: 'SourceCodePro';
   src: url('/fonts/Source_Code_Pro/SourceCodePro.ttf') format('truetype');
@@ -39,19 +34,18 @@
 }
 
 .title {
-  color: rgb(230, 230, 230);
+  color: #e6e6e6;
   font-family: 'SpecialGothic';
 }
 
 .word {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-family: 'SourceCodePro';
 }
 
 .text-input {
   opacity: 0%;
 }
-
 
 .statistic {
   color: #F79F79;
@@ -72,9 +66,9 @@
 }
 
 .button {
-  @apply text-lg rounded-md px-4 py-2;
+  @apply text-lg rounded-full px-4 py-2;
   background-color: #9c7445;
-  color: #000000;
+  color: #1b1b1b;
   font-family: 'Karla';
   font-weight: bold;
 }
