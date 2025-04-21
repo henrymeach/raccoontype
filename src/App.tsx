@@ -12,7 +12,7 @@ function App() {
   // game variables
   const paragraphLengths = [16, 32, 64];
   const wordsRanges = [1000, 2000, 5000, 10000];
-  const [paragraphLengthIndex, setParagraphLengthIndex] = useState<number>(0);
+  const [paragraphLengthIndex, setParagraphLengthIndex] = useState<number>(1);
   const [wordsRangeIndex, setWordsRangeIndex] = useState<number>(0);
 
   // The user's current text input
