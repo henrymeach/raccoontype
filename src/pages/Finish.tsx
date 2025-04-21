@@ -2,15 +2,35 @@ import { useLocation, useNavigate } from "react-router";
 import { TypedStatus } from "../enums/TypedStatus";
 import clsx from "clsx";
 import Tooltip from "../components/Tooltip";
+import { Keys } from "../enums/Keys";
+import { useEffect } from "react";
 
 export default function Finish() {
     const navigate = useNavigate();
     const location = useLocation();
     const { wpm, accuracy, characters, duration, typedWords, typedStatuses, paragraph } = location.state || {};
 
+    useEffect(() => {
+        const onKeyPress = (event: KeyboardEvent) => {
+            if (event.shiftKey && event.key === Keys.ENTER) {
+                navigate('/');
+            };
+        }
+
+        document.addEventListener('keydown',
+            onKeyPress
+        );
+
+        return () => {
+            document.removeEventListener('keydown', onKeyPress);
+        };
+    }, [])
+
+    
+
     return (
         <>
-            <div className="flex flex-col space-y-20 items-center">
+            <div className="flex flex-col space-y-20 items-center" onKeyDown={(e: React.KeyboardEvent) => onKeyPress(e)}>
                 <section className="flex flex-wrap space-x-5">
                     {paragraph.split(' ').map((word: string, index: number) => (
                         <span className={clsx(
@@ -32,7 +52,7 @@ export default function Finish() {
                         </span>
                     ))}
                 </section>
-                <section className="grid grid-flow-col gap-30">
+                <section className="grid grid-cols-5 w-full">
                     <div className="flex flex-col items-center">
                         <span className="statistic">
                             {Math.round(wpm * (accuracy)) / 100}
@@ -77,7 +97,7 @@ export default function Finish() {
                 <button onClick={() => navigate('/')} className='button relative flex space-x-3 group'>
                     <img src='/icons/arrow-back.svg' alt='Back arrow' />
                     <p>Return</p>
-                    <Tooltip title="CTRL + Enter" className='group-hover:opacity-100' />
+                    <Tooltip title="Shift + Enter" className='group-hover:opacity-100' />
                 </button>
             </div>
         </>
