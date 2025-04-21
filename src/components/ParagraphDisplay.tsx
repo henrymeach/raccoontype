@@ -1,6 +1,7 @@
 import { TypedStatus } from "../enums/TypedStatus";
 import '../App.css';
 import clsx from 'clsx';
+import { useEffect, useState } from "react";
 
 
 type ParagraphDisplayProps = {
@@ -11,10 +12,26 @@ type ParagraphDisplayProps = {
 }
 
 const ParagraphDisplay = ({ paragraph, typedStatuses, currentIndex, currentInput }: ParagraphDisplayProps) => {
+    const [visible, setVisible] = useState<boolean>(true);
+    const [displayedParagraph, setDisplayedParagraph] = useState<string>(paragraph);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setDisplayedParagraph(paragraph);
+            setVisible(true);
+        }, 100)
+        
+
+        return () => {
+            setVisible(false);
+            clearTimeout(timeout);
+        };
+    }, [paragraph]);
+
     return (
-        <div>
+        <div className={`${visible ? 'opacity-100' : 'opacity-0'} duration-100 min-w-full`}>
             <p>
-                {renderParagraph({paragraph, typedStatuses, currentIndex, currentInput})}
+                {renderParagraph({paragraph: displayedParagraph, typedStatuses, currentIndex, currentInput})}
             </p>
         </div>
     )
