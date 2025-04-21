@@ -9,9 +9,11 @@ import Tooltip from './components/Tooltip';
 function App() {
   let navigate = useNavigate();
 
-  // game constants
-  const PARAGRAPH_LENGTH = 16;
-  const MOST_COMMON_WORDS_RANGE = 1000;
+  // game variables
+  const paragraphLengths = [16, 32, 64];
+  const wordsRanges = [1000, 2000, 5000, 10000];
+  const [paragraphLengthIndex, setParagraphLengthIndex] = useState<number>(0);
+  const [wordsRangeIndex, setWordsRangeIndex] = useState<number>(0);
 
   // The user's current text input
   const [textInput, setTextInput] = useState<string>('');
@@ -48,7 +50,7 @@ function App() {
     if (words.length > 0) {
       onReset();
     };
-  }, [words]);
+  }, [words, paragraphLengthIndex, wordsRangeIndex]);
 
   // Set the current letter index (weird function)
   useEffect(() => {
@@ -57,32 +59,32 @@ function App() {
 
   // if user finishes paragraph
   useEffect(() => {
-    if (typedWords.length === PARAGRAPH_LENGTH) {
+    if (typedWords.length === paragraphLengths[paragraphLengthIndex]) {
       onParagraphFinish();
     }
   }, [typedWords]);
 
-
   // Reset paragraph to new paragraph
   const onReset = () => {
+
+    const paragraphLength = paragraphLengths[paragraphLengthIndex];
+    const wordsRange = wordsRanges[wordsRangeIndex];
 
     function getRandomInt(min: number, max: number): number {
       return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     let newParagraph = '';
-    for (let _ = 0; _ < PARAGRAPH_LENGTH; _++) {
-      newParagraph += words[getRandomInt(0, MOST_COMMON_WORDS_RANGE)] + ' ';
+    for (let _ = 0; _ < paragraphLength; _++) {
+      newParagraph += words[getRandomInt(0, wordsRange)] + ' ';
     };
 
+    // reset to default values
     setTextInput('');
-    // const [words, setWords] = useState<string[]>([]);
-    // const [paragraph, setParagraph('');
     setCurrentWordIndex(0);
-    // currentWord = paragraph.split(' ')[currentWordIndex];
     setCurrentLetterIndex(0);
     setHadTypo(false);
-    setTypedStatusList(new Array(PARAGRAPH_LENGTH).fill(TypedStatus.UNTYPED));
+    setTypedStatusList(new Array(paragraphLength).fill(TypedStatus.UNTYPED));
     setTypedWords([]);
     setTimestamps([]);
 
@@ -127,9 +129,9 @@ function App() {
   function onParagraphFinish() {
 
     const startTime = timestamps[0];
-    const finishTime = timestamps[PARAGRAPH_LENGTH];
+    const finishTime = timestamps[paragraphLengths[paragraphLengthIndex]];
     const durationSeconds = Math.abs(finishTime.getTime() - startTime.getTime()) / 1000;
-    const characters = paragraph.length;
+    const characters = paragraph.length - 1;
 
     // standardised word is 5 letters long
     const wpm = Math.round((characters / (durationSeconds/60) / 5 * 100)) / 100
@@ -142,7 +144,7 @@ function App() {
       if (typedStatus === TypedStatus.INCORRECT) incorrectWords.push(paragraphWords[index]);
     } );
 
-    const accuracy = Math.round(((characters - incorrectWords.join('').length) / characters) * 10000) / 100;
+    const accuracy = Math.max(0, Math.round(((characters - incorrectWords.join('').length - incorrectWords.length) / characters) * 10000) / 100);
     
     setParagraph(`${durationSeconds.toString()} seconds ${wpm} wpm ${characters} characters ${accuracy} accuracy ${wpm * accuracy} calculated`);
   
@@ -152,7 +154,7 @@ function App() {
   function onKeyPress(e: React.KeyboardEvent) {
 
     const newTextInput = textInput + e.key;
-    const isLastWord = currentWordIndex === PARAGRAPH_LENGTH - 1;
+    const isLastWord = currentWordIndex === paragraphLengths[paragraphLengthIndex] - 1;
 
     if (timestamps.length === 0) {
       setTimestamps([new Date()]);
@@ -169,7 +171,7 @@ function App() {
     }
 
     // if key press is character
-    if (e.key.length === 1) {
+    if (e.key.length === 1 && !(e.ctrlKey)) {
       setTextInput(newTextInput);
     }
 
@@ -191,7 +193,7 @@ function App() {
     };
 
     // if user wants to reset
-    if (e.ctrlKey && e.key === Keys.ENTER) {
+    if (e.shiftKey && e.key === Keys.ENTER) {
       onReset();
     }
     
@@ -199,21 +201,33 @@ function App() {
 
   return (
     <>
-      <div className='flex flex-col items-center'>
-        <div className={`${textInput === currentWord.substring(0,textInput.length) ? 'text-[rgb(230,230,230)]' : 'text-[rgb(207,0,0)]'} word-input min-h-10`}>
-          {textInput}
+      <div className='flex flex-col relative'>
+        <div className='flex flex-col items-center mb-30'>
+          <div className={`${textInput === currentWord.substring(0,textInput.length) ? 'text-[rgb(230,230,230)]' : 'text-[rgb(207,0,0)]'} word-input min-h-10`}>
+            {textInput}
+          </div>
+          <ParagraphDisplay paragraph={paragraph} typedStatuses={typedStatusList} currentIndex={currentWordIndex} currentInput={textInput}  />
+          <input onBlur={({target}) =>  target.focus()} autoFocus className='text-input h-0' onKeyDown={(e: React.KeyboardEvent) => {
+            onKeyPress(e);
+          }} />
         </div>
-        <ParagraphDisplay paragraph={paragraph} typedStatuses={typedStatusList} currentIndex={currentWordIndex} currentInput={textInput} />
-        <input onBlur={({target}) => target.focus()} autoFocus className='text-input' onKeyDown={(e: React.KeyboardEvent) => {
-          onKeyPress(e);
-        }} />
-        <button onClick={() => onReset()} className='relative button flex flex-row space-x-3 group'>
-          <img src='/icons/refresh.svg' />
-          <p>
-            Reset
-          </p>
-          <Tooltip title='CTRL + Enter' className='group-hover:opacity-100' />
-        </button>
+        <div className='fixed bottom-[20%] right-1/2 translate-x-1/2 grid grid-cols-[1fr_3fr_1fr] max-w-[30%] w-full space-x-4'>
+          <button className='relative button group' onClick={() => setParagraphLengthIndex(prev => (prev + 1) % paragraphLengths.length)}>
+            {paragraphLengths[paragraphLengthIndex]}
+            <Tooltip title='Words' />
+          </button>
+          <button onClick={() => onReset()} className='relative button flex flex-row justify-center space-x-3 group'>
+            <img src='/icons/refresh.svg' />
+            <p>
+              Reset
+            </p>
+            <Tooltip title='Shift + Enter' />
+          </button>
+          <button className='relative button group' onClick={() => setWordsRangeIndex(prev => (prev + 1) % wordsRanges.length)}>
+            {wordsRanges[wordsRangeIndex]}
+            <Tooltip title='Most Common Words' />
+          </button>
+        </div>
       </div>
     </>
   )
