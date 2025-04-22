@@ -44,7 +44,7 @@ const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput, 
         <div className="relative">
         {
             paragraph.split(' ').map((word, wordIndex) => (
-                <span key={wordIndex} className={clsx(`word transition duration-500 ${focused ? '' : 'blur-xs'}`,
+                <span key={wordIndex} className={clsx(`word transition-filter duration-500 ${focused ? '' : 'blur-xs'}`,
                     typedStatuses[wordIndex] === TypedStatus.CORRECT ? 'correct-word' :
                     typedStatuses[wordIndex] === TypedStatus.INCORRECT ? 'incorrect-word' :
                     typedStatuses[wordIndex] === TypedStatus.TYPO ? 'typoed-word' :
@@ -65,7 +65,7 @@ const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput, 
                 </span>
             ))
         }
-        <p className={`${focused ? 'opacity-0' : 'opacity-100'} transition duration-700 absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 click-to-focus`}>Click here to focus</p>
+        <p className={`${focused ? 'opacity-0' : 'opacity-100'} transition duration-1000 absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 click-to-focus`}>Click here to focus</p>
         </div>
     )
 }
