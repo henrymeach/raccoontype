@@ -219,7 +219,7 @@ function App() {
 
   return (
     <>
-      <div className='flex flex-col relative' >
+      <div className='relative'>
         <div className='flex flex-col items-center mb-30'>
           <div className={`${textInput === currentWord.substring(0,textInput.length) ? 'text-[rgb(230,230,230)]' : 'text-[rgb(207,0,0)]'} word-input min-h-10`}>
             {textInput}
@@ -231,19 +231,19 @@ function App() {
         </div>
 
         {/* buttons */}
-        <div className='fixed bottom-[20%] right-1/2 translate-x-1/2 grid grid-cols-[1fr_3fr_1fr] max-w-[30%] w-full space-x-4'>
-          <button className='relative button group' onClick={() => {setParagraphLengthIndex(prev => (prev + 1) % paragraphLengths.length); handleFocus()}}>
+        <div className='w-full fixed flex flex-row right-1/2 translate-x-1/2 justify-center bottom-[16%] space-x-4'>
+          <button className='relative button-secondary group' onClick={() => {setParagraphLengthIndex(prev => (prev + 1) % paragraphLengths.length); handleFocus()}}>
             {paragraphLengths[paragraphLengthIndex]}
             <Tooltip title='Words' />
           </button>
-          <button onClick={() => {onReset(); handleFocus()}} className='relative button flex flex-row justify-center space-x-3 group'>
+          <button onClick={() => {onReset(); handleFocus()}} className='relative !px-10 button flex flex-row justify-center space-x-3 group'>
             <img src='/icons/refresh.svg' />
             <p>
               Reset
             </p>
             <Tooltip title='Shift + Enter' />
           </button>
-          <button className='relative button group' onClick={() => {setWordsRangeIndex(prev => (prev + 1) % wordsRanges.length); handleFocus()}}>
+          <button className='relative button-secondary group' onClick={() => {setWordsRangeIndex(prev => (prev + 1) % wordsRanges.length); handleFocus()}}>
             {wordsRanges[wordsRangeIndex]}
             <Tooltip title='Most Common Words' />
           </button>
