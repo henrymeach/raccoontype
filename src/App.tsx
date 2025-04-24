@@ -161,7 +161,8 @@ function App() {
     const newTextInput = textInput + e.key;
     const isLastWord = currentWordIndex === paragraphLengths[paragraphLengthIndex] - 1;
 
-    if (timestamps.length === 0) {
+    // if starting with a character key press
+    if (e.key.length === 1 && timestamps.length === 0) {
       setTimestamps([new Date()]);
     }
 
