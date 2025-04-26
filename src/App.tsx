@@ -232,7 +232,7 @@ function App() {
         </div>
 
         {/* buttons */}
-        <div className='w-full fixed flex flex-row right-1/2 translate-x-1/2 justify-center bottom-[16%] space-x-4'>
+        <div className='w-full fixed flex md:flex-row right-1/2 translate-x-1/2 justify-center bottom-[16%] space-x-4'>
           <button className='relative button-secondary group' onClick={() => {setParagraphLengthIndex(prev => (prev + 1) % paragraphLengths.length); handleFocus()}}>
             {paragraphLengths[paragraphLengthIndex]}
             <Tooltip title='Words' />
