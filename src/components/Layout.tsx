@@ -6,12 +6,12 @@ export default function Layout () {
 
   return (
     <div className='relative min-h-[100vh] flex flex-col'>
-      <header className='relative mt-8 flex justify-center items-center mx-[4%] md:mx-[10%]'>
+      <header className='relative mt-8 flex flex-col md:flex-row justify-center md:items-center mx-[4%] md:mx-[10%]'>
           <Link to='/' className='flex flex-row items-center group'>
             <div className='rounded outline-2 outline-[#e6e6e6] -outline-offset-2 w-8 h-8 flex items-center justify-center group-hover:scale-110 group-active:scale-90'>
-              <h1 className='title text-3xl'>R</h1>
+              <h2 className='title text-3xl'>R</h2>
             </div>
-            <h1 className='title text-3xl'>accoon_Type</h1>
+            <h2 className='title hidden md:block text-3xl'>accoon_Type</h2>
           </Link>
           <nav className='absolute right-0 flex space-x-6'>
             <Link to='/' >
