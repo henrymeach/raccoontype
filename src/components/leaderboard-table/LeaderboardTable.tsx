@@ -15,6 +15,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/Table'
+import clsx from 'clsx';
 
 interface LeaderboardTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -32,11 +33,11 @@ export function LeaderboardTable<TData, TValue>({
     });
 
     return (
-        <div className='rounded-md border'>
-            <Table>
+        <div>
+            <Table className='border-separate border-spacing-y-1'>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
+                        <TableRow key={headerGroup.id} className='leaderboard-header'>
                             {headerGroup.headers.map((header) => {
                                 return (
                                     <TableHead key={header.id}>
@@ -56,12 +57,24 @@ export function LeaderboardTable<TData, TValue>({
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
+                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='bg-[#3b3228] leaderboard-row h-16'>
+                                {row.getVisibleCells().map((cell, index) => {
+                                    const isFirst = (index === 0)
+                                    const isLast = (index === row.getVisibleCells().length - 1)
+
+                                    return (
+                                    <TableCell key={cell.id} className={clsx(
+                                        '',
+                                        isFirst
+                                        ? 'rounded-l-xl'
+                                        : isLast
+                                        ? 'rounded-r-xl'
+                                        : ''
+                                    )}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </TableCell>
-                                ))}
+                                    )
+                                })}
                             </TableRow>
                         ))
                     ) : (
