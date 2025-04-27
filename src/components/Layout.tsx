@@ -13,9 +13,14 @@ export default function Layout () {
             </div>
             <h1 className='title text-3xl'>accoon_Type</h1>
           </Link>
-          <Link to='/leaderboard' className='absolute right-1' >
-            <img src='/icons/leaderboard.svg' />
-          </Link>
+          <nav className='absolute right-0 flex space-x-6'>
+            <Link to='/' >
+              <img src='/icons/keyboard.svg' className='scale-110' />
+            </Link>
+            <Link to='/leaderboard' >
+              <img src='/icons/leaderboard.svg' />
+            </Link>
+          </nav>
       </header>
         
       <main className='px-[4%] md:px-[10%] my-auto'>
@@ -31,7 +36,7 @@ export default function Layout () {
                 </svg>
             </a>
           </button>
-          <button className='flex items-center cursor-pointer'>
+          <button className='flex items-center cursor-pointer translate-y-px'>
             <a target='_blank' href='https://henrymeach.com'>
                 <svg xmlns="http://www.w3.org/2000/svg" x='0px' y='0px' width="24" height="24" viewBox='0 0 32 32'>
                     <image height='30' width='30' href='/logos/henrymeach.com.svg' />
