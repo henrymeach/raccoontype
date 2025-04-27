@@ -4,6 +4,7 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
+    getPaginationRowModel,
     useReactTable,
 } from '@tanstack/react-table'
 
@@ -30,6 +31,7 @@ export function LeaderboardTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     });
 
     return (
@@ -57,7 +59,7 @@ export function LeaderboardTable<TData, TValue>({
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='bg-[#3b3228] leaderboard-row h-16'>
+                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='bg-[#382f25] leaderboard-row h-16'>
                                 {row.getVisibleCells().map((cell, index) => {
                                     const isFirst = (index === 0)
                                     const isLast = (index === row.getVisibleCells().length - 1)
@@ -66,9 +68,9 @@ export function LeaderboardTable<TData, TValue>({
                                     <TableCell key={cell.id} className={clsx(
                                         '',
                                         isFirst
-                                        ? 'rounded-l-xl'
+                                        ? 'rounded-l-md'
                                         : isLast
-                                        ? 'rounded-r-xl'
+                                        ? 'rounded-r-md'
                                         : ''
                                     )}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -86,6 +88,23 @@ export function LeaderboardTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
+
+            <div className='flex items-center justify-center space-x-2 py-4'>
+                <button
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                    className='bg-[#6d5131] hover:bg-[#523d25] active:bg-[#40301d] disabled:opacity-20 disabled:cursor-not-allowed rounded cursor-pointer p-2'
+                >
+                    <img src='/icons/left.svg' />
+                </button>
+                <button
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                    className='bg-[#6d5131] hover:bg-[#523d25] active:bg-[#40301d] disabled:opacity-20 disabled:cursor-not-allowed rounded cursor-pointer p-2'
+                >
+                    <img src='/icons/right.svg' />
+                </button>
+            </div>
         </div>
     )
 }

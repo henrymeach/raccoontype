@@ -7,8 +7,11 @@ export default function Leaderboard() {
     const data = entries;
 
     return (
-        <>
+        <div className="my-10 space-y-10">
+            <h1 className="title-secondary text-5xl font-medium">
+                Leaderboard
+            </h1>
             <LeaderboardTable columns={columns} data={data} />
-        </>
+        </div>
     )
 }
