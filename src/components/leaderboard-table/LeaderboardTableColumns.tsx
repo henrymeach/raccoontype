@@ -21,21 +21,24 @@ export const LeaderboardTableColumns: ColumnDef<LeaderboardEntry>[] = [
         cell: ({row}) => {
             const rawWpm: number = row.getValue('raw_wpm');
             const accuracy: number = row.getValue('accuracy');
-            const wpm = rawWpm * accuracy
+            const wpm = Math.round((rawWpm * accuracy) * 100) / 100
             return <div>{wpm}</div>
         }
     },
     {
         accessorKey: 'raw_wpm',
         header: 'Raw WPM',
-
+        cell: ({row}) => {
+            const rawWpm: number = row.getValue('raw_wpm');
+            const formatted = Math.round(rawWpm * 100) / 100;
+            return <div>{formatted}</div>
+        }
     },
     {
         accessorKey: 'accuracy',
         header: 'Accuracy',
         cell: ({row}) => {
             const formatted = `${Math.round(row.getValue<number>('accuracy') * 10000) / 100}%`
-
             return <div>{formatted}</div>
         }
     },
@@ -43,11 +46,11 @@ export const LeaderboardTableColumns: ColumnDef<LeaderboardEntry>[] = [
         accessorKey: 'date',
         header: () => <div>Date</div>,
         cell: ({row}) => {
-            const date: Date = row.getValue('date');
+            const dateString: string = row.getValue('date');
+            const date: Date = new Date(dateString);
+
             const formatted = `${date.toLocaleString('default', {dateStyle: 'medium'})}`
-
             return <div>{formatted}</div>
-
         }
     },
 ]
