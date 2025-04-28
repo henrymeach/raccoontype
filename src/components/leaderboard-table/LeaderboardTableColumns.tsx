@@ -22,7 +22,7 @@ export const LeaderboardTableColumns: ColumnDef<LeaderboardEntry>[] = [
             const rawWpm: number = row.getValue('raw_wpm');
             const accuracy: number = row.getValue('accuracy');
             const wpm = Math.round((rawWpm * accuracy) * 100) / 100
-            return <div>{wpm}</div>
+            return <div className="font-black">{wpm}</div>
         }
     },
     {

@@ -4,9 +4,9 @@ const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env
 
 export async function fetchLeaderboardData() {
     const { data, error } = await supabase
-        .from('SCORES')
+        .from('scores_view')
         .select()
-        .order('raw_wpm', { ascending: false });
+        .order('wpm', { ascending: false });
 
     if (error) {
         console.error('Error fetching leaderboard data', error);
