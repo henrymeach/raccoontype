@@ -1,10 +1,20 @@
 import { LeaderboardTable } from "@/components/leaderboard-table/LeaderboardTable";
 import { LeaderboardTableColumns } from "@/components/leaderboard-table/LeaderboardTableColumns";
-import { entries } from "@/data/LeaderboardEntries";
+import { fetchLeaderboardData } from "@/data/LeaderboardDataActions";
+import { useEffect, useState } from "react";
 
 export default function Leaderboard() {
     const columns = LeaderboardTableColumns;
-    const data = entries;
+    const [data, setData] = useState<any[]>([]);
+
+    useEffect(() => {
+        const loadData = async () => {
+            const leaderboardData = await fetchLeaderboardData();
+            if (leaderboardData) setData(leaderboardData);
+        }
+        
+        loadData();
+    }, [])
 
     return (
         <div className="my-10 space-y-10">
