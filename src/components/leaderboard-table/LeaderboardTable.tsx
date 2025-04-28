@@ -59,7 +59,7 @@ export function LeaderboardTable<TData, TValue>({
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='bg-[#382f25] leaderboard-row h-16'>
+                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='bg-[#382f25] hover:bg-[#4f4334] leaderboard-row h-16'>
                                 {row.getVisibleCells().map((cell, index) => {
                                     const isFirst = (index === 0)
                                     const isLast = (index === row.getVisibleCells().length - 1)
