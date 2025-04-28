@@ -4,12 +4,16 @@ import clsx from "clsx";
 import Tooltip from "../components/Tooltip";
 import { Keys } from "../enums/Keys";
 import { useEffect, useState } from "react";
+import { insertDataToLeaderboard } from "@/data/LeaderboardDataActions";
+import { generateRandomRaccoonName } from "@/lib/GenerateRandomRaccoonName";
 
 export default function Finish() {
     const navigate = useNavigate();
     const location = useLocation();
     const [visible, setVisible] = useState<boolean>(false);
-    const { wpm, accuracy, characters, duration, typedWords, typedStatuses, paragraph } = location.state || {};
+    const [submittedScore, setSubmittedScore] = useState<boolean>(false);
+    const [raccoonName, setRaccoonName] = useState<string>('DefaultRaccoon');
+    const { wpm, accuracy, accuracyPercentage, characters, duration, typedWords, typedStatuses, paragraph } = location.state || {};
 
     useEffect(() => {
         const onKeyPress = (event: KeyboardEvent) => {
@@ -31,11 +35,30 @@ export default function Finish() {
         setTimeout(() => setVisible(true), 200)
     }, []);
 
+    useEffect(() => {
+        const fetchRaccoonName = async () => {
+            const name = await generateRandomRaccoonName();
+            setRaccoonName(name);
+        }
+
+        fetchRaccoonName();
+    }, []);
+
+    function onSubmit({raw_wpm, accuracy}: {
+        raw_wpm: number;
+        accuracy: number;
+    }) {
+        if (!submittedScore) {
+            setSubmittedScore(true);
+            insertDataToLeaderboard({username: raccoonName, raw_wpm: raw_wpm, accuracy: accuracy});
+        }
+    }
+
     return (
-        <div className={`${visible ? 'opacity-100' : 'opacity-0'} transition duration-200 flex flex-col space-y-20 items-center`}>
+        <div className={`${visible ? 'opacity-100' : 'opacity-0'} transition duration-200 flex flex-col space-y-20 my-20 items-center`}>
             <section className="flex flex-wrap space-x-5">
                 {paragraph.split(' ').map((word: string, index: number) => (
-                    <span className={clsx(
+                    <span key={index} className={clsx(
                         'relative word',
                         typedStatuses[index] === TypedStatus.INCORRECT ? 'incorrect-word' :
                         typedStatuses[index] === TypedStatus.TYPO ? 'typoed-word' :
@@ -54,10 +77,10 @@ export default function Finish() {
                     </span>
                 ))}
             </section>
-            <section className="grid grid-cols-2 space-y-12 md:grid-cols-5 w-full">
+            <section className="grid grid-cols-2 space-y-12 md:space-y-0 md:grid-cols-5 w-full">
                 <div className="flex flex-col items-center">
                     <span className="statistic">
-                        {Math.round(wpm * (accuracy)) / 100}
+                        {Math.round(wpm * (accuracyPercentage)) / 100}
                     </span>
                     <span className="statistic-category">
                         wpm
@@ -73,7 +96,7 @@ export default function Finish() {
                 </div>
                 <div className="flex flex-col items-center">
                     <span className="statistic">
-                        {accuracy}%
+                        {accuracyPercentage}%
                     </span>
                     <span className="statistic-category">
                         accuracy
@@ -96,11 +119,24 @@ export default function Finish() {
                     </span>
                 </div>
             </section>
-            <button onClick={() => navigate('/')} className='button relative flex space-x-3 group'>
-                <img src='/icons/arrow-back.svg' alt='Back arrow' />
-                <p>Return</p>
-                <Tooltip title="Shift + Enter" className='group-hover:opacity-100' />
-            </button>
+            <div className="flex flex-col w-full items-center space-y-4">
+                <div className="flex space-x-4">
+                    <button onClick={() => navigate('/')} className='button relative flex space-x-3 group items-center cursor-pointer'>
+                        <img src='/icons/arrow-back.svg' alt='Back arrow' />
+                        <p>Return</p>
+                        <Tooltip title="Shift + Enter" className='group-hover:opacity-100' />
+                    </button>
+                    <div className="relative">
+                        <button disabled={submittedScore} onClick={() => onSubmit({raw_wpm: wpm, accuracy: accuracy})} className='relative button flex space-x-3 items-center disabled:opacity-20 cursor-pointer'>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1b1b1b"><path d="M360-720h80v-80h-80v80Zm160 0v-80h80v80h-80ZM360-400v-80h80v80h-80Zm320-160v-80h80v80h-80Zm0 160v-80h80v80h-80Zm-160 0v-80h80v80h-80Zm160-320v-80h80v80h-80Zm-240 80v-80h80v80h-80ZM200-160v-640h80v80h80v80h-80v80h80v80h-80v320h-80Zm400-320v-80h80v80h-80Zm-160 0v-80h80v80h-80Zm-80-80v-80h80v80h-80Zm160 0v-80h80v80h-80Zm80-80v-80h80v80h-80Z"/></svg>
+                            <p>
+                                {submittedScore ? 'Submitted' : 'Submit Score'}
+                            </p>
+                        </button>
+                        <Tooltip title={`Submitted as ${raccoonName}`} className={`${submittedScore ? 'opacity-100' : 'opacity-0'} text-center`} />
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
