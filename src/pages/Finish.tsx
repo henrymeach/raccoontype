@@ -54,7 +54,7 @@ export default function Finish() {
                     </span>
                 ))}
             </section>
-            <section className="grid grid-cols-5 w-full">
+            <section className="grid grid-cols-2 space-y-12 md:grid-cols-5 w-full">
                 <div className="flex flex-col items-center">
                     <span className="statistic">
                         {Math.round(wpm * (accuracy)) / 100}
