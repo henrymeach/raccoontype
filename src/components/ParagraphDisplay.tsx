@@ -32,9 +32,7 @@ const ParagraphDisplay = ({ paragraph, typedStatuses, currentIndex, currentInput
 
     return (
         <div className={`${visible ? 'opacity-100' : 'opacity-0'} duration-100 min-w-full`} onClick={onClick}>
-            <p>
-                {renderParagraph({paragraph: displayedParagraph, typedStatuses, currentIndex, currentInput, focused})}
-            </p>
+            {renderParagraph({paragraph: displayedParagraph, typedStatuses, currentIndex, currentInput, focused})}
         </div>
     )
 }
@@ -44,7 +42,7 @@ const renderParagraph = ({paragraph, typedStatuses, currentIndex, currentInput, 
         <div className="relative">
         {
             paragraph.split(' ').map((word, wordIndex) => (
-                <span key={wordIndex} className={clsx(`word transition-filter duration-500 ${focused ? '' : 'blur-xs'}`,
+                <span key={wordIndex} className={clsx(`word duration-500 ${focused ? '' : 'blur-xs'}`,
                     typedStatuses[wordIndex] === TypedStatus.CORRECT ? 'correct-word' :
                     typedStatuses[wordIndex] === TypedStatus.INCORRECT ? 'incorrect-word' :
                     typedStatuses[wordIndex] === TypedStatus.TYPO ? 'typoed-word' :
