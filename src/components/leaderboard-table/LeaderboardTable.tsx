@@ -81,8 +81,8 @@ export function LeaderboardTable<TData, TValue>({
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={columns.length} className='h-24 text-center'>
-                                No results found.
+                            <TableCell colSpan={columns.length} className='bg-[#382f25] rounded-md h-64 leaderboard-row text-center'>
+                                <p className='animate-spin'>Loading...</p>
                             </TableCell>
                         </TableRow>
                     )}
