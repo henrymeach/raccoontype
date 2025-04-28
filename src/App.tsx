@@ -150,19 +150,18 @@ function App () {
         incorrectWords.push(paragraphWords[index])
     })
 
-    const accuracy = Math.max(
+    const accuracy = ((characters - incorrectWords.join('').length - incorrectWords.length) / characters);
+
+    const accuracyPercentage = Math.max(
       0,
-      Math.round(
-        ((characters - incorrectWords.join('').length - incorrectWords.length) /
-          characters) *
-          10000
-      ) / 100
+      Math.round(accuracy * 10000) / 100
     )
 
     navigate('/finish', {
       state: {
         wpm: wpm,
         accuracy: accuracy,
+        accuracyPercentage: accuracyPercentage,
         characters: characters,
         duration: durationSeconds.toString(),
         typedWords: typedWords,
