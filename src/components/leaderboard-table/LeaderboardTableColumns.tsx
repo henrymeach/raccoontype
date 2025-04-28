@@ -19,14 +19,14 @@ export const LeaderboardTableColumns: ColumnDef<LeaderboardEntry>[] = [
     {
         header: 'WPM',
         cell: ({row}) => {
-            const rawWpm: number = row.getValue('rawWpm');
+            const rawWpm: number = row.getValue('raw_wpm');
             const accuracy: number = row.getValue('accuracy');
             const wpm = rawWpm * accuracy
             return <div>{wpm}</div>
         }
     },
     {
-        accessorKey: 'rawWpm',
+        accessorKey: 'raw_wpm',
         header: 'Raw WPM',
 
     },
