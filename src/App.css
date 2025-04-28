@@ -87,6 +87,11 @@
   font-weight: bold;
 }
 
+.tooltip {
+  font-family: 'Karla';
+  font-weight: bold;
+}
+
 .button:hover {
   background-color: #6d5131;
 }
