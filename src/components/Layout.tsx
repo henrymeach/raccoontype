@@ -15,10 +15,14 @@ export default function Layout () {
           </Link>
           <nav className='absolute right-0 flex space-x-6'>
             <Link to='/' >
-              <img src='/icons/keyboard.svg' className='scale-110' />
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" className='scale-110 fill-[#9c7445] hover:fill-[#755633] active:fill-[#5b4328]'>
+                <path d="M160-200q-33 0-56.5-23.5T80-280v-400q0-33 23.5-56.5T160-760h640q33 0 56.5 23.5T880-680v400q0 33-23.5 56.5T800-200H160Zm0-80h640v-400H160v400Zm160-40h320v-80H320v80ZM200-440h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80ZM200-560h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80ZM160-280v-400 400Z"/>
+              </svg>
             </Link>
             <Link to='/leaderboard' >
-              <img src='/icons/leaderboard.svg' />
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" className='scale-110 fill-[#9c7445] hover:fill-[#755633] active:fill-[#5b4328]'>
+                <path d="M160-200h160v-320H160v320Zm240 0h160v-560H400v560Zm240 0h160v-240H640v240ZM80-120v-480h240v-240h320v320h240v400H80Z"/>
+              </svg>
             </Link>
           </nav>
       </header>
@@ -39,7 +43,7 @@ export default function Layout () {
           <button className='flex items-center cursor-pointer translate-y-px'>
             <a target='_blank' href='https://henrymeach.com'>
                 <svg xmlns="http://www.w3.org/2000/svg" x='0px' y='0px' width="24" height="24" viewBox='0 0 32 32'>
-                    <image height='30' width='30' href='/logos/henrymeach.com.svg' />
+                    <image height='30' width='30' href='/logos/henrymeach.png' />
                 </svg>
             </a>
           </button>
