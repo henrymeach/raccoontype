@@ -4,11 +4,11 @@ import { fetchLeaderboardRowCount, fetchNextLeaderboardData } from "@/data/Leade
 import { useEffect, useState } from "react";
 
 export default function Leaderboard() {
-    const columns = LeaderboardTableColumns;
     const [data, setData] = useState<any[]>([]);
     const [page, setPage] = useState<number>(1);
     const [rowCount, setRowCount] = useState<number>(0);
     const pageSize = 10;
+    const columns = LeaderboardTableColumns({page: page, pageSize: pageSize});
 
     // get a range of data based on page and page size
     useEffect(() => {
