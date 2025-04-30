@@ -2,13 +2,27 @@ import { LeaderboardTable } from "@/components/leaderboard-table/LeaderboardTabl
 import { LeaderboardTableColumns } from "@/components/leaderboard-table/LeaderboardTableColumns";
 import { fetchLeaderboardRowCount, fetchNextLeaderboardData } from "@/data/LeaderboardDataActions";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 
 export default function Leaderboard() {
+    // search params
+    const [searchParams, setSearchParams] = useSearchParams();
+    const pageParam = Number(searchParams.get('page'));
+
     const [data, setData] = useState<any[]>([]);
-    const [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(pageParam ? pageParam : 1);
     const [rowCount, setRowCount] = useState<number>(0);
     const pageSize = 10;
     const columns = LeaderboardTableColumns({page: page, pageSize: pageSize});
+
+    const handlePageChange = (page: number) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('page', page.toString());
+            return newParams;
+        });
+        setPage(page);
+    }
 
     // get a range of data based on page and page size
     useEffect(() => {
@@ -35,7 +49,7 @@ export default function Leaderboard() {
             <h1 className="title-secondary text-5xl font-medium">
                 Leaderboard
             </h1>
-            <LeaderboardTable columns={columns} data={data} page={page} pageSize={pageSize} handlePageChange={(page:number) => setPage(page)} rowCount={rowCount} />
+            <LeaderboardTable columns={columns} data={data} page={page} pageSize={pageSize} handlePageChange={handlePageChange} rowCount={rowCount} />
         </div>
     )
 }
