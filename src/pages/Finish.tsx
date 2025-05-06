@@ -6,6 +6,7 @@ import { Keys } from "../enums/Keys";
 import { useEffect, useState } from "react";
 import { insertDataToLeaderboard } from "@/data/LeaderboardDataActions";
 import { generateRandomRaccoonName } from "@/lib/GenerateRandomRaccoonName";
+import FinishGraph from "@/components/FinishGraph";
 
 export default function Finish() {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function Finish() {
     const [visible, setVisible] = useState<boolean>(false);
     const [submittedScore, setSubmittedScore] = useState<boolean>(false);
     const [raccoonName, setRaccoonName] = useState<string>('DefaultRaccoon');
-    const { wpm, accuracy, accuracyPercentage, characters, duration, typedWords, typedStatuses, paragraph } = location.state || {};
+    const { wpm, accuracy, accuracyPercentage, characters, duration, timestamps, typedWords, typedStatuses, paragraph } = location.state || {};
 
     useEffect(() => {
         const onKeyPress = (event: KeyboardEvent) => {
@@ -55,7 +56,7 @@ export default function Finish() {
     }
 
     return (
-        <div className={`${visible ? 'opacity-100' : 'opacity-0'} transition duration-200 flex flex-col space-y-20 my-20 items-center`}>
+        <div className={`${visible ? 'opacity-100' : 'opacity-0'} transition duration-200 flex flex-col space-y-20 my-20 md:my-40 items-center`}>
             <section className="flex flex-wrap space-x-5">
                 {paragraph.split(' ').map((word: string, index: number) => (
                     <span key={index} className={clsx(
@@ -137,6 +138,9 @@ export default function Finish() {
                     </div>
                 </div>
             </div>
+            <section className="w-full">
+                <FinishGraph timestamps={timestamps} words={paragraph.trim().split(' ')} typedWords={typedWords} />
+            </section>
         </div>
     )
 }

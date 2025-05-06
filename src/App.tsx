@@ -164,6 +164,7 @@ function App () {
         accuracyPercentage: accuracyPercentage,
         characters: characters,
         duration: durationSeconds.toString(),
+        timestamps: timestamps,
         typedWords: typedWords,
         typedStatuses: typedStatusList,
         paragraph: paragraph
